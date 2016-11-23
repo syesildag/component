@@ -4,8 +4,6 @@
  */
 package component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -59,22 +57,22 @@ public class ComponentManager<C extends AbstractRootComponent<?, ?, ?>>
    
    protected LinkedHashMap<String, String> processTemplates()
    {
-      LinkedHashMap<String, String> templates = new LinkedHashMap<String, String>();
+      LinkedHashMap<String, String> templates = new LinkedHashMap<>();
       processTemplate(this.component, templates);
       return templates;
    }
    
-   private <T extends Component<? extends Data, ? extends Data, ? extends Component<?, ?, ?>>> void processTemplate(@SuppressWarnings("hiding") T component, LinkedHashMap<String, String> templates)
+   protected void processTemplate(Component<?, ?, ?> comp, LinkedHashMap<String, String> templates)
    {
-      String templateID = component.getTemplateID();
+      String templateID = comp.getTemplateID();
       if(!templates.containsKey(templateID))
       {
-         String templateHTML = component.getTemplateHTML();
+         String templateHTML = comp.getTemplateHTML();
          if(templateHTML != null)
             templates.put(templateID, templateHTML);
       }
       
-      List<? extends Component<?, ?, ?>> children = component.getComponents();
+      List<? extends Component<?, ?, ?>> children = comp.getComponents();
       if(children != null)
          for(Component<?, ?, ?> child : children)
             processTemplate(child, templates);
@@ -102,9 +100,7 @@ public class ComponentManager<C extends AbstractRootComponent<?, ?, ?>>
       output.appendOnDOMReadyJavascript( this.getRenderJS() );
    }
    
-   @SuppressWarnings("boxing")
    public static void main(String[] args)
-      throws JsonProcessingException
    {
       //
    }

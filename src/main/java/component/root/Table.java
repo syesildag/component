@@ -29,10 +29,9 @@ TB extends TableBody<? extends TBD, TRD, TR>
 >
 extends AbstractRootComponent<D, Data, AbstractComponent<? extends Data, TRD, TR>>
 {
-   @SuppressWarnings("unchecked")
-   public Table(String key, Component.NameSpace nameSpace, D data, TH compoundTableHead, TB compoundTableBody)
+   public Table(String key, Component.NameSpace nameSpace, D data, TH tableHead, TB tableBody)
    {
-      super(key, nameSpace, data, Arrays.asList(compoundTableHead, compoundTableBody));
+      super(key, nameSpace, data, Arrays.asList(tableHead, tableBody));
    }
    
    /* (non-Javadoc)
