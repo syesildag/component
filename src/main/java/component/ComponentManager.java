@@ -1,64 +1,111 @@
+/**
+ * @author SYESILDAG
+ * https://github.com/syesildag/component
+ */
 package component;
 
-import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ComponentManager <C extends Component<? extends Data>> {
-    private C component;
-
-    public ComponentManager() {
-    }
-
-    public ComponentManager(C component) {
-        this.component = component;
-    }
-
-    public String getBootstrapJS() {
-        return "JReact.bootstrap(document)";
-    }
-
-    public LinkedHashMap<String, String> processTemplates() {
-        LinkedHashMap<String, String> templates = new LinkedHashMap<String, String>();
-        processTemplate(this.component, templates);
-        return templates;
-    }
-
-    private <T extends Component<? extends Data>> void processTemplate(T component, LinkedHashMap<String, String> templates) {
-
-        String templateID = component.getTemplateID();
-        if(!templates.containsKey(templateID)) {
-            String templateHTML = component.getTemplateHTML();
-            if(templateHTML != null)
-                templates.put(templateID, templateHTML);
-        }
-
-        ArrayList<? extends Component<? extends Data>> children = component.getChildren();
-        if(children != null)
-            for (Component<? extends Data> child : children)
-                processTemplate(child, templates);
-    }
-    
-    public Object toJSON() throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(this.component);
-    }
-
-    public static void main(String[] args) throws JsonProcessingException {
-
-        CompoundProductItemComponent pc2 = new CompoundProductItemComponent("PC2", new CompoundProductItemData("PC", 2));
-        CompoundProductItemComponent loc5 = new CompoundProductItemComponent("LOC5", new CompoundProductItemData("LOC", 5));
-        CompoundProductItemsComponent items = new CompoundProductItemsComponent("items", new ArrayList<CompoundProductItemComponent>(Arrays.asList(pc2, loc5)));
-
-        ComponentManager<CompoundProductItemsComponent> cm = new ComponentManager<CompoundProductItemsComponent>(items);
-        LinkedHashMap<String, String> templates = cm.processTemplates();
-
-        for(String templateID : templates.keySet()) {
-            System.out.println("templateID: " + templateID);
-            System.out.println("templateHTML: " + templates.get(templateID));
-        }
-
-        System.out.println("toJSON: " + cm.toJSON());
-    }
+public class ComponentManager<C extends AbstractRootComponent<?, ?, ?>>
+{
+   private C component;
+   
+   public ComponentManager()
+   {
+   }
+   
+   public ComponentManager(C component)
+   {
+      this.component = component;
+   }
+   
+   public C getComponent()
+   {
+      return this.component;
+   }
+   
+   @SuppressWarnings("static-method")
+   protected String getBootstrapJS()
+   {
+      return "JReact.bootstrap(document);";
+   }
+   
+   protected String getRenderJS() throws JsonProcessingException
+   {
+      C com = this.getComponent();
+      return "JReact.render(JReact.createElement("+com.getNameSpace().name()+"."+com.getName()+", "+this.toJSON()+"), "+com.getJQueryInstance()+".parent());";
+   }
+   
+   protected StringBuilder getScripts()
+   {
+      StringBuilder scripts = new StringBuilder();
+      
+      LinkedHashMap<String, String> templates = this.processTemplates();
+      for(String templateID : templates.keySet())
+      {
+         scripts.append("<script type=\"text/html\" id=\""+templateID+"\">");
+         scripts.append(templates.get(templateID));
+         scripts.append("</script>");
+      }
+      
+      return scripts;
+   }
+   
+   protected LinkedHashMap<String, String> processTemplates()
+   {
+      LinkedHashMap<String, String> templates = new LinkedHashMap<String, String>();
+      processTemplate(this.component, templates);
+      return templates;
+   }
+   
+   private <T extends Component<? extends Data, ? extends Data, ? extends Component<?, ?, ?>>> void processTemplate(@SuppressWarnings("hiding") T component, LinkedHashMap<String, String> templates)
+   {
+      String templateID = component.getTemplateID();
+      if(!templates.containsKey(templateID))
+      {
+         String templateHTML = component.getTemplateHTML();
+         if(templateHTML != null)
+            templates.put(templateID, templateHTML);
+      }
+      
+      List<? extends Component<?, ?, ?>> children = component.getComponents();
+      if(children != null)
+         for(Component<?, ?, ?> child : children)
+            processTemplate(child, templates);
+   }
+   
+   protected String toJSON()
+      throws JsonProcessingException
+   {
+      return new ObjectMapper().writeValueAsString(this.component);
+   }
+   
+   /**
+    * @author SYESILDAG
+    * @param output
+    * @param element
+    * @param scripts
+    * @throws ResalysException
+    */
+   public void bootstrap(Output output, String element, String scripts)
+      throws JsonProcessingException
+   {
+      output.setVarValue( element, this.getComponent().getHTML() );
+      output.setVarValue( scripts, this.getScripts().toString() );
+      output.appendOnDOMReadyJavascript( this.getBootstrapJS() );
+      output.appendOnDOMReadyJavascript( this.getRenderJS() );
+   }
+   
+   @SuppressWarnings("boxing")
+   public static void main(String[] args)
+      throws JsonProcessingException
+   {
+      //
+   }
 }
