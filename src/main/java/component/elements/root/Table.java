@@ -1,7 +1,7 @@
 /**
  * 
  */
-package component.root;
+package component.elements.root;
 
 import java.util.Arrays;
 
@@ -9,9 +9,9 @@ import component.AbstractComponent;
 import component.AbstractRootComponent;
 import component.Component;
 import component.Data;
-import component.sub.TableBody;
-import component.sub.TableHead;
-import component.sub.TableRow;
+import component.elements.sub.TableBody;
+import component.elements.sub.TableHead;
+import component.elements.sub.TableRow;
 
 /**
  * @author SYESILDAG
