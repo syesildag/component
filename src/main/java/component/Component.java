@@ -7,11 +7,6 @@ import java.util.List;
 
 public interface Component<D extends Data, T extends Data, C extends Component<? extends T, ?, ?>>
 {
-   public static enum NameSpace
-   {
-      JReactComponents
-   }
-   
    public static enum Tag
    {
       table, tbody, thead, tr, td
@@ -35,9 +30,9 @@ public interface Component<D extends Data, T extends Data, C extends Component<?
    
    public void setName(String name);
    
-   public NameSpace getNameSpace();
+   public String getNameSpace();
    
-   public void setNameSpace(NameSpace namespace);
+   public void setNameSpace(String namespace);
    
    public String getTemplateID();
    

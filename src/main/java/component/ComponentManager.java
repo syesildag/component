@@ -37,7 +37,7 @@ public class ComponentManager<C extends AbstractRootComponent<?, ?, ?>>
    protected String getRenderJS() throws JsonProcessingException
    {
       C com = this.getComponent();
-      return "JReact.render(JReact.createElement("+com.getNameSpace().name()+"."+com.getName()+", "+this.toJSON()+"), "+com.getJQueryInstance()+".parent());";
+      return "JReact.render(JReact.createElement("+com.getNameSpace()+"."+com.getName()+", "+this.toJSON()+"), "+com.getJQueryInstance()+".parent());";
    }
    
    protected StringBuilder getScripts()
@@ -57,12 +57,13 @@ public class ComponentManager<C extends AbstractRootComponent<?, ?, ?>>
    
    protected LinkedHashMap<String, String> processTemplates()
    {
-      LinkedHashMap<String, String> templates = new LinkedHashMap<>();
+      @SuppressWarnings("unused")
+      LinkedHashMap<String, String> templates = new LinkedHashMap<String, String>();
       processTemplate(this.component, templates);
       return templates;
    }
    
-   protected void processTemplate(Component<?, ?, ?> comp, LinkedHashMap<String, String> templates)
+   private void processTemplate(Component<?, ?, ?> comp, LinkedHashMap<String, String> templates)
    {
       String templateID = comp.getTemplateID();
       if(!templates.containsKey(templateID))
@@ -90,12 +91,13 @@ public class ComponentManager<C extends AbstractRootComponent<?, ?, ?>>
     * @param element
     * @param scripts
     * @throws ResalysException
+    * @throws JsonProcessingException 
     */
    public void bootstrap(Output output, String element, String scripts)
       throws JsonProcessingException
    {
       output.setVarValue( element, this.getComponent().getHTML() );
-      output.setVarValue( scripts, this.getScripts().toString() );
+      output.setVarValue( scripts, this.getScripts() );
       output.appendOnDOMReadyJavascript( this.getBootstrapJS() );
       output.appendOnDOMReadyJavascript( this.getRenderJS() );
    }

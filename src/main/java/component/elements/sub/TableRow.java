@@ -6,7 +6,6 @@ package component.elements.sub;
 import java.util.List;
 
 import component.AbstractComponent;
-import component.Component;
 import component.Data;
 
 /**
@@ -19,9 +18,9 @@ public abstract class TableRow<D extends Data, T extends Data, C extends TableDa
    {
    }
    
-   public TableRow(String key, Component.NameSpace nameSpace, D data, List<? extends C> children)
+   public TableRow(String key, D data, List<? extends C> children)
    {
-      super(key, nameSpace, data, children);
+      super(key, data, children);
    }
    
    /* (non-Javadoc)

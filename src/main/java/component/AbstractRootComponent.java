@@ -10,7 +10,7 @@ public abstract class AbstractRootComponent<D extends Data, T extends Data, C ex
    public AbstractRootComponent() {
    }
    
-   public AbstractRootComponent(String key, Component.NameSpace nameSpace, D data, List<? extends C> children) {
-      super(key, nameSpace, data, children);
+   public AbstractRootComponent(String key, D data, List<? extends C> children) {
+      super(key, data, children);
    }
 }

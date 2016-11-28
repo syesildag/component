@@ -6,7 +6,6 @@ package component.elements.sub;
 import java.util.List;
 
 import component.AbstractComponent;
-import component.Component;
 import component.Data;
 
 /**
@@ -24,9 +23,9 @@ public abstract class TableBody<D extends Data, TRD extends Data, TR extends Tab
     * @param data
     * @param children
     */
-   public TableBody(String key, Component.NameSpace nameSpace, D data, List<? extends TR> children)
+   public TableBody(String key, D data, List<? extends TR> children)
    {
-      super(key, nameSpace, data, children);
+      super(key, data, children);
    }
    
    /* (non-Javadoc)

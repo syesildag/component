@@ -9,6 +9,6 @@ package component;
  */
 public interface Output
 {
-   void setVarValue(String element, String html);
+   void setVarValue(String var, Object value);
    void appendOnDOMReadyJavascript(String bootstrapJS);
 }

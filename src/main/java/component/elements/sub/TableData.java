@@ -7,7 +7,6 @@ import java.util.List;
 
 import component.AbstractComponent;
 import component.AbstractRootComponent;
-import component.Component;
 import component.Data;
 
 /**
@@ -20,9 +19,9 @@ public abstract class TableData<D extends Data, T extends Data, C extends Abstra
    {
    }
    
-   public TableData(String key, Component.NameSpace nameSpace, D data, List<? extends C> children)
+   public TableData(String key, D data, List<? extends C> children)
    {
-      super(key, nameSpace, data, children);
+      super(key, data, children);
    }
    
    /* (non-Javadoc)

@@ -5,6 +5,8 @@ package component;
 
 import java.util.List;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,17 +14,15 @@ public abstract class AbstractComponent<D extends Data, T extends Data, C extend
 {
    private String key;
    private String className;
-   private Component.NameSpace nameSpace;
    private D data;
    private List<? extends C> components;
    
    public AbstractComponent(){
    }
    
-   public AbstractComponent(String key, Component.NameSpace nameSpace, D data, List<? extends C> components)
+   public AbstractComponent(String key, D data, List<? extends C> components)
    {
       this.key = key;
-      this.nameSpace = nameSpace;
       this.data = data;
       this.components = components;
    }
@@ -34,11 +34,11 @@ public abstract class AbstractComponent<D extends Data, T extends Data, C extend
    @Override
    public String getHTML()
    {
-      return "<"+this.getTag()+" "+getDataKeySelector(this.getKey())+" data-jreact-namespace='" + this.getNameSpace().name() + "' data-jreact-name='" + this.getName() + "'></"+this.getTag()+">";
+      return "<"+this.getTag()+" "+getDataKeySelector(this.getKey())+" data-jreact-namespace='" + this.getNameSpace() + "' data-jreact-name='" + this.getName() + "'></"+this.getTag()+">";
    }
    
    /* (non-Javadoc)
-    * @see component.Component#getKey()
+    * @see component.Component#getSelector()
     */
    @JsonProperty
    @Override
@@ -48,7 +48,7 @@ public abstract class AbstractComponent<D extends Data, T extends Data, C extend
    }
    
    /* (non-Javadoc)
-    * @see component.Component#setKey(java.lang.String)
+    * @see component.Component#setSelector(java.lang.String)
     */
    @JsonIgnore
    @Override
@@ -117,19 +117,22 @@ public abstract class AbstractComponent<D extends Data, T extends Data, C extend
    /* (non-Javadoc)
     * @see component.Component#getNameSpace()
     */
+   @JsonProperty
    @Override
-   public final Component.NameSpace getNameSpace()
+   public final String getNameSpace()
    {
-      return this.nameSpace;
+      String[] split = this.getClass().getPackage().getName().split("\\.");
+      return WordUtils.capitalize(split[split.length-1]) + "Components";
    }
    
    /* (non-Javadoc)
-    * @see component.Component#setNameSpace(component.Component.NameSpace)
+    * @see component.Component#setNameSpace(java.lang.String)
     */
+   @JsonIgnore
    @Override
-   public final void setNameSpace(Component.NameSpace nameSpace)
+   public final void setNameSpace(String nameSpace)
    {
-      this.nameSpace = nameSpace;
+      // NOT SET
    }
    
    /* (non-Javadoc)
@@ -182,7 +185,7 @@ public abstract class AbstractComponent<D extends Data, T extends Data, C extend
    }
    
    /* (non-Javadoc)
-    * @see component.Component#setData(com.resalys.engine.web.component.Data)
+    * @see component.Component#setData(component.Data)
     */
    @Override
    public final void setData(D data)
