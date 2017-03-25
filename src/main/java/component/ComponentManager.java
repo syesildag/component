@@ -104,6 +104,6 @@ public class ComponentManager<C extends AbstractRootComponent<?, ?, ?>>
    
    public static void main(String[] args)
    {
-      //
+      System.out.println("hello world!");
    }
 }
